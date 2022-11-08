@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace RefactoringToPatterns.CommandPattern
 {
     public class MarsRover
@@ -8,10 +10,7 @@ namespace RefactoringToPatterns.CommandPattern
         private const string availableDirections = "NESW";
         internal readonly string[] obstacles;
         internal bool obstacleFound;
-        private readonly MoveToNorthCommand moveToNorthCommand;
-        private readonly MoveToWestCommand moveToWestCommand;
-        private readonly MoveToSouthCommand moveToSouthCommand;
-        private readonly MoveToEastCommand moveToEastCommand;
+        private Dictionary<char, IMoveCommand> moveCommand;
 
         public MarsRover(int x, int y, char direction, string[] obstacles)
         {
@@ -19,10 +18,14 @@ namespace RefactoringToPatterns.CommandPattern
             this.y = y;
             this.direction = direction;
             this.obstacles = obstacles;
-            moveToNorthCommand = new MoveToNorthCommand(this);
-            moveToWestCommand = new MoveToWestCommand(this);
-            moveToSouthCommand = new MoveToSouthCommand(this);
-            moveToEastCommand = new MoveToEastCommand(this);
+            moveCommand = new Dictionary<char, IMoveCommand>{
+                { 'N', new MoveToNorthCommand(this) },
+                { 'E', new MoveToEastCommand(this) },
+                { 'S', new MoveToSouthCommand(this) },
+                { 'W', new MoveToWestCommand(this) }
+            };
+
+
         }
         
         public string GetState()
@@ -34,23 +37,8 @@ namespace RefactoringToPatterns.CommandPattern
         {
             foreach(char command in commands)
             {
-                if (command == 'M')
-                {
-                    switch (direction)
-                    {
-                        case 'E':
-                            moveToEastCommand.MoveCommand();
-                            break;
-                        case 'S':
-                            moveToSouthCommand.MoveCommand();
-                            break;
-                        case 'W':
-                            moveToWestCommand.MoveCommand();
-                            break;
-                        case 'N':
-                            moveToNorthCommand.MoveCommand();
-                            break;
-                    }
+                if (command == 'M') {
+                    moveCommand[direction].MoveCommand();
                 }
                 else if(command == 'L')
                 {

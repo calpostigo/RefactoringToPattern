@@ -2,7 +2,7 @@ using System.Collections;
 
 namespace RefactoringToPatterns.CommandPattern {
     public class MoveToWestCommand : IMoveCommand {
-        private MarsRover marsRover;
+        private readonly MarsRover marsRover;
         public MoveToWestCommand(MarsRover marsRover) {
             this.marsRover = marsRover;
         }
