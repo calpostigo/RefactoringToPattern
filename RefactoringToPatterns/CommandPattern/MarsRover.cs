@@ -32,24 +32,32 @@ namespace RefactoringToPatterns.CommandPattern
                     moveCommand.Move();
                 }
                 else if(command == 'L') {
-                    // get new direction
-                    var currentDirectionPosition = availableDirections.IndexOf(direction);
-                    if (currentDirectionPosition == 0) {
-                        direction = availableDirections[3];
-                    }
-                    else {
-                        direction = availableDirections[currentDirectionPosition - 1];
-                    }
+                    TurnLeft();
                 } else if (command == 'R') {
-                    // get new direction
-                    var currentDirectionPosition = availableDirections.IndexOf(direction);
-                    if (currentDirectionPosition == 3) {
-                        direction = availableDirections[0];
-                    }
-                    else {
-                        direction = availableDirections[currentDirectionPosition + 1];
-                    }
+                    TurnRight();
                 }
+            }
+        }
+
+        private void TurnRight() {
+            // get new direction
+            var currentDirectionPosition = availableDirections.IndexOf(direction);
+            if (currentDirectionPosition == 3) {
+                direction = availableDirections[0];
+            }
+            else {
+                direction = availableDirections[currentDirectionPosition + 1];
+            }
+        }
+
+        private void TurnLeft() {
+            // get new direction
+            var currentDirectionPosition = availableDirections.IndexOf(direction);
+            if (currentDirectionPosition == 0) {
+                direction = availableDirections[3];
+            }
+            else {
+                direction = availableDirections[currentDirectionPosition - 1];
             }
         }
     }
