@@ -7,7 +7,7 @@ namespace RefactoringToPatterns.CommandPattern {
             this.marsRover = marsRover;
         }
 
-        public void MoveCommand() {
+        public void Execute() {
             marsRover.obstacleFound = marsRover.obstacles.Contains($"{marsRover.x}:{marsRover.y - 1}");
             // check if rover reached plateau limit or found an obstacle
             marsRover.y = marsRover.y > 0 && !marsRover.obstacleFound ? marsRover.y -= 1 : marsRover.y;

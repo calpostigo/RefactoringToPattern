@@ -1,16 +1,14 @@
-using System.Collections.Generic;
-
 namespace RefactoringToPatterns.CommandPattern
 {
     public class MarsRover
     {
         public int x;
         internal int y;
-        private char direction;
+        internal char direction;
         private const string availableDirections = "NESW";
         internal readonly string[] obstacles;
         internal bool obstacleFound;
-        private Dictionary<char, IMoveCommand> moveCommand;
+        private readonly MoveCommand moveCommand;
 
         public MarsRover(int x, int y, char direction, string[] obstacles)
         {
@@ -18,14 +16,7 @@ namespace RefactoringToPatterns.CommandPattern
             this.y = y;
             this.direction = direction;
             this.obstacles = obstacles;
-            moveCommand = new Dictionary<char, IMoveCommand>{
-                { 'N', new MoveToNorthCommand(this) },
-                { 'E', new MoveToEastCommand(this) },
-                { 'S', new MoveToSouthCommand(this) },
-                { 'W', new MoveToWestCommand(this) }
-            };
-
-
+            moveCommand = new MoveCommand(this);
         }
         
         public string GetState()
@@ -38,31 +29,25 @@ namespace RefactoringToPatterns.CommandPattern
             foreach(char command in commands)
             {
                 if (command == 'M') {
-                    moveCommand[direction].MoveCommand();
+                    moveCommand.Move();
                 }
-                else if(command == 'L')
-                {
+                else if(command == 'L') {
                     // get new direction
                     var currentDirectionPosition = availableDirections.IndexOf(direction);
-                    if (currentDirectionPosition != 0)
-                    {
-                        direction = availableDirections[currentDirectionPosition-1];
-                    }
-                    else
-                    {
+                    if (currentDirectionPosition == 0) {
                         direction = availableDirections[3];
                     }
-                } else if (command == 'R')
-                {
+                    else {
+                        direction = availableDirections[currentDirectionPosition - 1];
+                    }
+                } else if (command == 'R') {
                     // get new direction
                     var currentDirectionPosition = availableDirections.IndexOf(direction);
-                    if (currentDirectionPosition != 3)
-                    {
-                        direction = availableDirections[currentDirectionPosition+1];
-                    }
-                    else
-                    {
+                    if (currentDirectionPosition == 3) {
                         direction = availableDirections[0];
+                    }
+                    else {
+                        direction = availableDirections[currentDirectionPosition + 1];
                     }
                 }
             }
