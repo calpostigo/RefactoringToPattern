@@ -1,15 +1,17 @@
-using System.Linq;
-
 namespace RefactoringToPatterns.CommandPattern
 {
     public class MarsRover
     {
-        private int x;
-        private int y;
+        public int x;
+        internal int y;
         private char direction;
         private const string availableDirections = "NESW";
-        private readonly string[] obstacles;
-        private bool obstacleFound;
+        internal readonly string[] obstacles;
+        internal bool obstacleFound;
+        private readonly MoveToNorthCommand moveToNorthCommand;
+        private readonly MoveToWestCommand moveToWestCommand;
+        private readonly MoveToSouthCommand moveToSouthCommand;
+        private readonly MoveToEastCommand moveToEastCommand;
 
         public MarsRover(int x, int y, char direction, string[] obstacles)
         {
@@ -17,6 +19,10 @@ namespace RefactoringToPatterns.CommandPattern
             this.y = y;
             this.direction = direction;
             this.obstacles = obstacles;
+            moveToNorthCommand = new MoveToNorthCommand(this);
+            moveToWestCommand = new MoveToWestCommand(this);
+            moveToSouthCommand = new MoveToSouthCommand(this);
+            moveToEastCommand = new MoveToEastCommand(this);
         }
         
         public string GetState()
@@ -33,16 +39,16 @@ namespace RefactoringToPatterns.CommandPattern
                     switch (direction)
                     {
                         case 'E':
-                            MoveToEast();
+                            moveToEastCommand.MoveToEast();
                             break;
                         case 'S':
-                            MoveToSouth();
+                            moveToSouthCommand.MoveToSouth();
                             break;
                         case 'W':
-                            MoveToWest();
+                            moveToWestCommand.MoveToWest();
                             break;
                         case 'N':
-                            MoveToNorth();
+                            moveToNorthCommand.MoveToNorth();
                             break;
                     }
                 }
@@ -72,30 +78,6 @@ namespace RefactoringToPatterns.CommandPattern
                     }
                 }
             }
-        }
-
-        private void MoveToNorth() {
-            obstacleFound = obstacles.Contains($"{x}:{y - 1}");
-            // check if rover reached plateau limit or found an obstacle
-            y = y > 0 && !obstacleFound ? y -= 1 : y;
-        }
-
-        private void MoveToWest() {
-            obstacleFound = obstacles.Contains($"{x - 1}:{y}");
-            // check if rover reached plateau limit or found an obstacle
-            x = x > 0 && !obstacleFound ? x -= 1 : x;
-        }
-
-        private void MoveToSouth() {
-            obstacleFound = obstacles.Contains($"{x}:{y + 1}");
-            // check if rover reached plateau limit or found an obstacle
-            y = y < 9 && !obstacleFound ? y += 1 : y;
-        }
-
-        private void MoveToEast() {
-            obstacleFound = obstacles.Contains($"{x + 1}:{y}");
-            // check if rover reached plateau limit or found an obstacle
-            x = x < 9 && !obstacleFound ? x += 1 : x;
         }
     }
 }
