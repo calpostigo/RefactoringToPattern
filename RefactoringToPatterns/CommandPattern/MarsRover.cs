@@ -5,10 +5,12 @@ namespace RefactoringToPatterns.CommandPattern
         public int x;
         internal int y;
         internal char direction;
-        private const string availableDirections = "NESW";
+        internal const string availableDirections = "NESW";
         internal readonly string[] obstacles;
         internal bool obstacleFound;
         private readonly MoveCommand moveCommand;
+        private readonly TurnRightCommand turnRightCommand;
+        private readonly TurnLeftCommand turnLeftCommand;
 
         public MarsRover(int x, int y, char direction, string[] obstacles)
         {
@@ -17,6 +19,8 @@ namespace RefactoringToPatterns.CommandPattern
             this.direction = direction;
             this.obstacles = obstacles;
             moveCommand = new MoveCommand(this);
+            turnRightCommand = new TurnRightCommand(this);
+            turnLeftCommand = new TurnLeftCommand(this);
         }
         
         public string GetState()
@@ -32,32 +36,10 @@ namespace RefactoringToPatterns.CommandPattern
                     moveCommand.Move();
                 }
                 else if(command == 'L') {
-                    TurnLeft();
+                    turnLeftCommand.TurnLeft();
                 } else if (command == 'R') {
-                    TurnRight();
+                    turnRightCommand.TurnRight();
                 }
-            }
-        }
-
-        private void TurnRight() {
-            // get new direction
-            var currentDirectionPosition = availableDirections.IndexOf(direction);
-            if (currentDirectionPosition == 3) {
-                direction = availableDirections[0];
-            }
-            else {
-                direction = availableDirections[currentDirectionPosition + 1];
-            }
-        }
-
-        private void TurnLeft() {
-            // get new direction
-            var currentDirectionPosition = availableDirections.IndexOf(direction);
-            if (currentDirectionPosition == 0) {
-                direction = availableDirections[3];
-            }
-            else {
-                direction = availableDirections[currentDirectionPosition - 1];
             }
         }
     }
